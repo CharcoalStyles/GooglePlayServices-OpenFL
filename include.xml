@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<ndll name="admob" if="ios" />
+	<dependency name="AdSupport.framework" if="ios" />
+	<dependency name="CoreTelephony.framework" if="ios" />
+	<dependency name="MessageUI.framework" if="ios" />
+	<dependency name="StoreKit.framework" if="ios" />
+	<dependency name="SystemConfiguration.framework" if="ios" />
+
+	<java path="android-template/libs/google-play-services.jar" if="android" />
+	<java path="android-template/libs/android-support-v4.jar" if="android" />
+	<template path="android-template/AndroidManifest.xml" rename="AndroidManifest.xml" if="android" />
+	<template path="android-template/src/org/haxe/lime/GameActivity.java" rename="src/org/haxe/lime/GameActivity.java" if="android" />
+	<template path="android-template/src/com/google/example/games/basegameutils/BaseGameActivity.java" rename="src/com/google/example/games/basegameutils/BaseGameActivity.java" if="android" />
+	<template path="android-template/src/com/google/example/games/basegameutils/GameHelper.java" rename="src/com/google/example/games/basegameutils/GameHelper.java" if="android" />
+	<template path="android-template/src/com/google/example/games/basegameutils/GameHelperUtils.java" rename="src/com/google/example/games/basegameutils/GameHelperUtils.java" if="android" />
+	<template path="android-template/res/values/gamehelper_strings.xml" rename="res/values/gamehelper_strings.xml" if="android" />
+</project>
