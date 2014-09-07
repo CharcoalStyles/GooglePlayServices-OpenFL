@@ -6,7 +6,7 @@ Originally based on https://github.com/mkorman9/admob-openfl
 
 Initial Setup
 --------------
-1. Clone this repo using ```haxelib git GPS https://github.com/charcoal/GooglePlayServices-OpenFL``` command   
+1. Clone this repo using ```haxelib git GPS https://github.com/CharcoalStyles/GooglePlayServices-OpenFL``` command   
 2. Add this line to your project.xml file ```<haxelib name="GPS" /> ```   
 3. Copy the file ids.xml to the root directory of the project.   
 4. Replace **Google_App_ID** in ids.xml with the Game Services App ID from the Google Play Developer Console.   
@@ -28,4 +28,3 @@ where arguments are following:
 3. Show Banner Ad ```AD.show();```   
 4. Show Interstitial Ad ```AD.showInterstitial();```   
 5. You can hide the Banner Ad anytime by calling ```AD.hide();```
-=======
