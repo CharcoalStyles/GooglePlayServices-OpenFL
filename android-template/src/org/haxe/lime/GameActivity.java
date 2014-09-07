@@ -47,7 +47,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.graphics.Color;
 import com.google.android.gms.ads.*;
 import com.google.android.gms.common.api.*;
-import com.google.example.games.basegameutils.BaseGameActivity;
+import com.google.example.games.basegameutils.*;
 ////////////////////////////////////////////////////////////////////////
 
 public class GameActivity extends BaseGameActivity implements SensorEventListener {
@@ -90,6 +90,8 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 	static Boolean adVisible = false, adInitialized = false, adTestMode = false;
 	static InterstitialAd interstitial;
 	static String testDeviceID;	
+	static GameActivity singleton;
+	
 	////////////////////////////////////////////////////////////////////////
 	
 	private static MainView mMainView;
@@ -98,8 +100,7 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 	
 	@Override
 	protected void onCreate (Bundle state) {
-		Log.d("GameActivityLOG", "Substituted GA");
-		
+		singleton = this;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate (state);
 		
@@ -174,7 +175,18 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 		
 	}
 	
+	/*
+	User Sign-In
+	*/
+	
+	static public void userSignIn()
+	{
+		Log.e ("userSignIn",  "userSignIn");
+		singleton.getGameHelper().beginUserInitiatedSignIn();
+	}
+	
 	////////////////////////////////////////////////////////////////////////
+	/*Ad mob functions*/
 	static public void loadAd() {
 		AdRequest adRequest;
 		if (testDeviceID.length() > 0)		
