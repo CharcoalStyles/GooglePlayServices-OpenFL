@@ -48,6 +48,7 @@ import android.graphics.Color;
 import com.google.android.gms.ads.*;
 import com.google.android.gms.common.api.*;
 import com.google.example.games.basegameutils.*;
+import com.google.android.gms.games.*;
 ////////////////////////////////////////////////////////////////////////
 
 public class GameActivity extends BaseGameActivity implements SensorEventListener {
@@ -185,6 +186,36 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 		singleton.getGameHelper().beginUserInitiatedSignIn();
 	}
 	
+	static public boolean userLoggedIn() {
+		return singleton.getGameHelper().isSignedIn();
+	}
+	
+	
+	/* Leaderboards */
+	static public void submitScore(final String board, final int score)
+	{
+		if (singleton.getGameHelper().isSignedIn())
+		{
+			Games.Leaderboards.submitScore(singleton.getApiClient(), board, score);
+		}
+	}
+	
+	static public void showLeaderboard(final String boardId)
+	{
+		if (singleton.getGameHelper().isSignedIn())
+		{
+			singleton.startActivityForResult(Games.Leaderboards.getLeaderboardIntent(singleton.getApiClient(), boardId), 42);
+		}
+	}
+	
+	static public void showAllLeaderboards()
+	{
+		if (singleton.getGameHelper().isSignedIn())
+		{
+			singleton.startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(singleton.getApiClient()), 42);
+		}
+	}
+	
 	////////////////////////////////////////////////////////////////////////
 	/*Ad mob functions*/
 	static public void loadAd() {
@@ -312,6 +343,8 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
             }
         });
     }
+	
+	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public static double CapabilitiesGetPixelAspectRatio () {

@@ -12,8 +12,7 @@ import com.google.android.gms.games.GamesActivityResultCodes;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import com.charcoalstyles.glichr.R;
+import ::APP_PACKAGE::.R;
 
 /**
  * Created by btco on 2/10/14.
