@@ -190,6 +190,31 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 		return singleton.getGameHelper().isSignedIn();
 	}
 	
+	/* Achievements */
+	static public void unlockAchievemnt(final String achievementId)
+	{
+		if (singleton.getGameHelper().isSignedIn())
+		{
+			Games.Achievements.unlock(singleton.getApiClient(), achievementId);
+		}
+	}
+	
+	static public void incrementAchievemnt(final String achievementId, final int amout)
+	{
+		if (singleton.getGameHelper().isSignedIn())
+		{
+			Games.Achievements.increment(singleton.getApiClient(), achievementId, amout);
+		}
+	}
+	
+	
+	static public void showAchievements()
+	{
+		if (singleton.getGameHelper().isSignedIn())
+		{
+			singleton.startActivityForResult(Games.Achievements.getAchievementsIntent(singleton.getApiClient()), 42);
+		}
+	}
 	
 	/* Leaderboards */
 	static public void submitScore(final String board, final int score)

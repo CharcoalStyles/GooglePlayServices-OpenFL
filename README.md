@@ -1,6 +1,6 @@
 GooglePlayServices-OpenFL
 =========================
-Google Play Services extension for OpenFL 
+Google Play Services (Android) extension for OpenFL 
 Originally based on https://github.com/mkorman9/admob-openfl
 
 Note: Upon setting up this library, Google Play Services will try to log when your application is started.
@@ -30,7 +30,14 @@ where the arguments are following:
 4. Show Interstitial Ad ```AD.showInterstitial();```   
 5. You can hide the Banner Ad anytime by calling ```AD.hide();```
 
+Achievements
+--------------
 
+1. Setup your achievements in the Google Play Developer Console
+2. Import Achievements class ```import playServices.Achievements;```
+3. Unlock an Achievement: ```Achievements.unlockAchievemnt(achievementId);```
+4. Icrement an Achievement: ```Achievements.incrementAchievemnt(achievementId, amount);```
+5. View Achieveements: ```Achievements.showAchievements();```
 
 Leaderboards
 --------------
