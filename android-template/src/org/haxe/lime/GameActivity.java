@@ -145,6 +145,7 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 		
         setContentView(rootLayout); 
 		testDeviceID = "";
+		
 		////////////////////////////////////////////////////////////////////////
 		
 		Extension.mainView = mView;
@@ -241,6 +242,45 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 		}
 	}
 	
+	/* Logging Helper */
+	
+	static public void log(int type, String tag, String msg)
+	{
+		switch(type)
+		{
+			case 2:
+				if (Log.isLoggable(tag, Log.VERBOSE)) {
+					Log.v(tag, msg);
+					}
+				break;
+			case 3:
+				if (Log.isLoggable(tag, Log.DEBUG)) {
+					Log.d(tag, msg);
+					}
+				break;
+			case 4:
+				if (Log.isLoggable(tag, Log.INFO)) {
+					Log.i(tag, msg);
+					}
+				break;
+			case 5:
+				if (Log.isLoggable(tag, Log.WARN)) {
+					Log.w(tag, msg);
+					}
+				break;
+			case 6:
+				if (Log.isLoggable(tag, Log.ERROR)) {
+					Log.e(tag, msg);
+					}
+				break;
+			case 7:
+				if (Log.isLoggable(tag, Log.ASSERT)) {
+					Log.wtf(tag, msg);
+					}
+				break;
+		}
+	}
+	
 	////////////////////////////////////////////////////////////////////////
 	/*Ad mob functions*/
 	static public void loadAd() {
@@ -268,7 +308,7 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 				if (activity == null) {
 					return;
 				}
-
+				
 				adView = new AdView(activity);
 				adView.setAdUnitId(adID);
 				adView.setAdSize(AdSize.SMART_BANNER);
@@ -350,7 +390,7 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 				}
 				else
 					adTestMode = false;
-					
+				
                 interstitial = new InterstitialAd(activity);
                 interstitial.setAdUnitId(id);
 
