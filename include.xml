@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<ndll name="admob" if="ios" />
+	<!--ndll name="admob" if="ios" />
 	<dependency name="AdSupport.framework" if="ios" />
 	<dependency name="CoreTelephony.framework" if="ios" />
 	<dependency name="MessageUI.framework" if="ios" />
 	<dependency name="StoreKit.framework" if="ios" />
-	<dependency name="SystemConfiguration.framework" if="ios" />
-
-	<java path="android-template/libs/google-play-services.jar" if="android" />
-	<java path="android-template/libs/android-support-v4.jar" if="android" />
-	<template path="android-template/AndroidManifest.xml" rename="AndroidManifest.xml" if="android" />
-	<template path="android-template/src/org/haxe/lime/GameActivity.java" rename="src/org/haxe/lime/GameActivity.java" if="android" />
-	<template path="android-template/src/com/google/example/games/basegameutils/BaseGameActivity.java" rename="src/com/google/example/games/basegameutils/BaseGameActivity.java" if="android" />
-	<template path="android-template/src/com/google/example/games/basegameutils/GameHelper.java" rename="src/com/google/example/games/basegameutils/GameHelper.java" if="android" />
-	<template path="android-template/src/com/google/example/games/basegameutils/GameHelperUtils.java" rename="src/com/google/example/games/basegameutils/GameHelperUtils.java" if="android" />
-	<template path="android-template/res/values/gamehelper_strings.xml" rename="res/values/gamehelper_strings.xml" if="android" />
+	<dependency name="SystemConfiguration.framework" if="ios" /-->
+	<section if="android">
+		<java path="android-template/libs/google-play-services.jar"  />
+		<java path="android-template/libs/android-support-v4.jar"  />
+		<template path="android-template/AndroidManifest.xml" rename="AndroidManifest.xml"  />
+		<template path="android-template/src/org/haxe/lime/GameActivity.java" rename="src/org/haxe/lime/GameActivity.java"  />
+		<template path="android-template/src/com/google/example/games/basegameutils/BaseGameActivity.java" rename="src/com/google/example/games/basegameutils/BaseGameActivity.java"  />
+		<template path="android-template/src/com/google/example/games/basegameutils/GameHelper.java" rename="src/com/google/example/games/basegameutils/GameHelper.java"  />
+		<template path="android-template/src/com/google/example/games/basegameutils/GameHelperUtils.java" rename="src/com/google/example/games/basegameutils/GameHelperUtils.java"  />
+		<template path="android-template/res/values/gamehelper_strings.xml" rename="res/values/gamehelper_strings.xml"  />
+		
+		<section if="androidBilling">
+			<haxedef name="ANDROID_BILLING" />
+			<android permission="com.android.vending.BILLING" />
+			<template path="android-template/src/com/example/android/trivialdrivesample/util/Base64.java" rename="src/com/example/android/trivialdrivesample/util/Base64.java" />
+			<template path="android-template/src/com/example/android/trivialdrivesample/util/Base64DecoderException.java" rename="src/com/example/android/trivialdrivesample/util/Base64DecoderException.java" />
+			<template path="android-template/src/com/example/android/trivialdrivesample/util/IabException.java" rename="src/com/example/android/trivialdrivesample/util/IabException.java" />
+			<template path="android-template/src/com/example/android/trivialdrivesample/util/IabHelper.java" rename="src/com/example/android/trivialdrivesample/util/IabHelper.java" />
+			<template path="android-template/src/com/example/android/trivialdrivesample/util/IabResult.java" rename="src/com/example/android/trivialdrivesample/util/IabResult.java" />
+			<template path="android-template/src/com/example/android/trivialdrivesample/util/Inventory.java" rename="src/com/example/android/trivialdrivesample/util/Inventory.java" />
+			<template path="android-template/src/com/example/android/trivialdrivesample/util/Purchase.java" rename="src/com/example/android/trivialdrivesample/util/Purchase.java" />
+			<template path="android-template/src/com/example/android/trivialdrivesample/util/Security.java" rename="src/com/example/android/trivialdrivesample/util/Security.java" />
+			<template path="android-template/src/com/example/android/trivialdrivesample/util/SkuDetails.java" rename="src/com/example/android/trivialdrivesample/util/SkuDetails.java" />
+			<template path="android-template/src/com/android/vending/billing/IInAppBillingService.aidl" rename="src/com/android/vending/billing/IInAppBillingService.aidl" />
+		</section>
+	</section>
 </project>

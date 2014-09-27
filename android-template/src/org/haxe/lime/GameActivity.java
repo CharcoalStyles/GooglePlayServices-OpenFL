@@ -39,6 +39,8 @@ import java.util.Locale;
 import java.util.List;
 import org.haxe.extension.Extension;
 import org.haxe.HXCPP;
+import java.util.Calendar;
+import android.widget.Toast;
 
 ////////////////////////////////////////////////////////////////////////
 import android.widget.FrameLayout;
@@ -49,6 +51,10 @@ import com.google.android.gms.ads.*;
 import com.google.android.gms.common.api.*;
 import com.google.example.games.basegameutils.*;
 import com.google.android.gms.games.*;
+import org.haxe.lime.HaxeObject;
+::if (ANDROID_PERMISSIONS != null)::::foreach ANDROID_PERMISSIONS::::if (__current__ == "com.android.vending.BILLING")::
+import com.example.android.trivialdrivesample.util.*;
+::end::::end::::end::
 ////////////////////////////////////////////////////////////////////////
 
 public class GameActivity extends BaseGameActivity implements SensorEventListener {
@@ -83,7 +89,6 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 	private static SensorManager sensorManager;
 	
 	public Handler mHandler;
-	
 	////////////////////////////////////////////////////////////////////////
 	static RelativeLayout adLayout;
 	static RelativeLayout.LayoutParams adMobLayoutParams;
@@ -92,7 +97,12 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 	static InterstitialAd interstitial;
 	static String testDeviceID;	
 	static GameActivity singleton;
-	
+	static boolean isUsingIAP = false;
+	::if (ANDROID_PERMISSIONS != null)::::foreach ANDROID_PERMISSIONS::::if (__current__ == "com.android.vending.BILLING")::
+	public IabHelper mHelper;
+	public boolean iapHelperSetup = false;
+	private static HaxeObject iapCallback;
+	::end::::end::::end::
 	////////////////////////////////////////////////////////////////////////
 	
 	private static MainView mMainView;
@@ -102,7 +112,16 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 	@Override
 	protected void onCreate (Bundle state) {
 		singleton = this;
+		
+		::if (ANDROID_PERMISSIONS != null)::::foreach ANDROID_PERMISSIONS::::if (__current__ == "com.android.vending.BILLING")::
+		isUsingIAP = true;
+		::end::::end::::end::
+		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
+		// Set requested clients (games and cloud save)
+		setRequestedClients(BaseGameActivity.CLIENT_ALL);
+		
 		super.onCreate (state);
 		
 		activity = this;
@@ -183,8 +202,11 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 	
 	static public void userSignIn()
 	{
-		Log.e ("userSignIn",  "userSignIn");
 		singleton.getGameHelper().beginUserInitiatedSignIn();
+	}
+	static public void userSignOut()
+	{
+		singleton.getGameHelper().signOut();
 	}
 	
 	static public boolean userLoggedIn() {
@@ -280,6 +302,119 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 				break;
 		}
 	}
+	
+	//IAP
+	static public boolean setupIap(String key)
+	{
+		Log.w("IAP", "Starting In-app Billing setup");
+		if (isUsingIAP)
+		{			
+		   // compute your public key and store it in base64EncodedPublicKey
+		   singleton.mHelper = new IabHelper(singleton, key);
+		   
+		   singleton.mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+			   public void onIabSetupFinished(IabResult result) {
+				  if (!result.isSuccess()) {
+					 // Oh noes, there was a problem.
+					 Log.e("IAP", "Problem setting up In-app Billing: " + result);
+				  }            
+					 // Hooray, IAB is fully set up! 
+					 singleton.iapHelperSetup = true;
+					 Log.w("IAP", "In-app Billing setup!");
+			   }
+			});
+		}
+		
+		return singleton.iapHelperSetup;
+	}
+	
+	static public void testReturnIapObject()
+	{
+		Log.w("IAP", "testReturnIapObject");
+		returnIapObject("testProduct", 42, "qwertyuiop");
+	}
+	
+	static public void setupIapCallback(final HaxeObject hxObj)
+	{
+		iapCallback = hxObj;
+	}
+	
+	static public void returnIapObject(final String productID, final int requestCode, final String payload)
+	{
+		GameActivity.getInstance().runOnUiThread
+		(
+			new Runnable()
+			{ 
+				public void run() 
+				{
+					iapCallback.call("onPurchase", new Object[] {productID, requestCode, payload});
+				}
+			}
+		);
+	}
+	
+	static public void lauchPurchaseFlow(String productID, int requestCode, String payload)
+	{
+		try
+		{
+			singleton.mHelper.launchPurchaseFlow(singleton, productID, requestCode, singleton.mPurchaseFinishedListener, payload);
+        }       
+        catch(IllegalStateException ex){
+            singleton.mHelper.flagEndAsync();
+        }
+	}
+	
+	static public void retrievePurchases()
+	{
+		GameActivity.getInstance().runOnUiThread
+		(
+			new Runnable()
+			{ 
+				public void run() 
+				{
+					try
+					{
+					singleton.mHelper.queryInventoryAsync(singleton.mGotInventoryListener); 
+					}
+					catch(IllegalStateException ex){
+						singleton.mHelper.flagEndAsync();
+					}
+				}
+			}
+		);
+	}
+	
+	IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener 
+	   = new IabHelper.OnIabPurchaseFinishedListener() {
+	   public void onIabPurchaseFinished(IabResult result, Purchase purchase) 
+	   {
+			if (result.isFailure()) {
+				Log.d("IAP", "Error purchasing: " + result);
+				return;
+			}      
+			else {
+				returnIapObject(purchase.getSku(), purchase.getPurchaseState(), purchase.getDeveloperPayload());
+			}
+	   }
+	};
+	IabHelper.QueryInventoryFinishedListener mGotInventoryListener 
+		= new IabHelper.QueryInventoryFinishedListener() {
+		public void onQueryInventoryFinished(IabResult result,
+			Inventory inventory) {
+
+			if (result.isFailure()) {
+				Log.d("IAP", "Error: " + result);
+				return;
+			}
+			else {
+				for (Purchase purchase : inventory.getAllPurchases())
+				{
+					returnIapObject(purchase.getSku(), purchase.getPurchaseState(), purchase.getDeveloperPayload());
+				}
+			}
+			returnIapObject("EOL", 0, "EOL");
+		}
+	};
 	
 	////////////////////////////////////////////////////////////////////////
 	/*Ad mob functions*/
@@ -408,8 +543,6 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
             }
         });
     }
-	
-	
 	///////////////////////////////////////////////////////////////////////////////////////////
 	
 	public static double CapabilitiesGetPixelAspectRatio () {
@@ -674,6 +807,12 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 			
 			extension.onDestroy ();
 			
+		}
+		
+		if (isUsingIAP)
+		{
+			if (mHelper != null) mHelper.dispose();
+			mHelper = null;
 		}
 		
 		// TODO: Wait for result?

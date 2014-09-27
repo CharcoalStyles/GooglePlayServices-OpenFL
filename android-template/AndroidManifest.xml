@@ -11,6 +11,9 @@
 		
 		<meta-data android:name="com.google.android.gms.version" android:value="5089000" />
 		<meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/app_id" />
+		::if (ANDROID_PERMISSIONS != null)::::foreach ANDROID_PERMISSIONS::::if (__current__ == "com.android.vending.BILLING")::
+		<meta-data android:name="com.google.android.gms.appstate.APP_ID" android:value="@string/app_id" />
+		::end::::end::::end::
 		
 		<activity 
 			android:name="MainActivity" 
