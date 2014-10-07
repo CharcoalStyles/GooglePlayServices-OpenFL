@@ -51,6 +51,7 @@ import com.google.android.gms.ads.*;
 import com.google.android.gms.common.api.*;
 import com.google.example.games.basegameutils.*;
 import com.google.android.gms.games.*;
+import com.google.android.gms.games.event.*;
 import org.haxe.lime.HaxeObject;
 ::if (ANDROID_PERMISSIONS != null)::::foreach ANDROID_PERMISSIONS::::if (__current__ == "com.android.vending.BILLING")::
 import com.example.android.trivialdrivesample.util.*;
@@ -236,6 +237,15 @@ public class GameActivity extends BaseGameActivity implements SensorEventListene
 		if (singleton.getGameHelper().isSignedIn())
 		{
 			singleton.startActivityForResult(Games.Achievements.getAchievementsIntent(singleton.getApiClient()), 42);
+		}
+	}
+	
+	/* Events */
+	static public void incrementEvent(final String event, final int amount)
+	{
+		if (singleton.getGameHelper().isSignedIn())
+		{
+			Games.Events.increment(singleton.getApiClient(), event, amount);
 		}
 	}
 	
